@@ -1,6 +1,6 @@
 /**
  * @author @sgb004 to Orange
- * @Version 2.1.1
+ * @Version 2.1.2
  */
 var orangeForms = {};
 
@@ -29,6 +29,7 @@ function OrangeForm( form, o ){
 	this.fieldsFilters = {};
 	this.useXMLHttpRequest = true;
 	this.reset = true;
+	this.name = this.form.name;
 
 	this.noticesValidation = {
 		empty: 'Este campo es requerido.',
@@ -363,13 +364,13 @@ OrangeForm.prototype = {
 		if( result.notice != '' ){
 			this.addNotices( result.notice, typeNotice );
 		}
+		
+		this._success( result, xmlhttp );
+		this.hiddenLoading();
 
 		if( result['success'] && this.reset ){ 
 			this.form.reset();
 		}
-		
-		this._success( result, xmlhttp );
-		this.hiddenLoading();
 	},
 	enabled: function(){
 		for( var i=0; i<this.form.elements.length; i++ ){
@@ -410,8 +411,8 @@ OrangeForm.prototype = {
 		var noticeArea;
 
 		if( this.form[name] == undefined || name == 'name' ){
-			if( typeof this.form.name == 'string' ){
-				name = this.form.name+'['+name+']';
+			if( typeof this.name == 'string' ){
+				name = this.name+'['+name+']';
 			}
 		}
 		
