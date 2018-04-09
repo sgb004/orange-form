@@ -1,6 +1,6 @@
 /**
  * @author @sgb004 to Orange
- * @Version 2.1.3
+ * @Version 2.1.4.b
  */
 var orangeForms = {};
 
@@ -57,8 +57,10 @@ OrangeForm.prototype = {
 		}
 
 		this.form.addEventListener( 'submit', function( e ){
-			e.preventDefault();
-			_this.submit();
+			var send = _this.submit();
+			if( send ){
+				e.preventDefault();
+			}
 		});
 
 		for( i=0; i<this.form.elements.length; i++ ){
@@ -326,6 +328,8 @@ OrangeForm.prototype = {
 				//data = this.applyFilter( 'pre_send_data', data );
 				xmlhttp.send( data );
 			}else{
+				isValid = false;
+				/*
 				this.form.removeEventListener( 'submit', function( e ){
 					e.preventDefault();
 					_this.submit();
@@ -335,8 +339,10 @@ OrangeForm.prototype = {
 					e.preventDefault();
 					_this.submit();
 				});
+				*/
 			}
 		}
+		return isValid;
 	},
 	error: function( xmlhttp ){
 		console.log( xmlhttp.responseText );
