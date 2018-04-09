@@ -1,6 +1,6 @@
 /**
  * @author @sgb004 to Orange
- * @Version 2.1.2
+ * @Version 2.1.3
  */
 var orangeForms = {};
 
@@ -193,7 +193,7 @@ OrangeForm.prototype = {
 				field['validate'] = function(){
 					var isValid = true;
 					var required = this.getAttribute( 'required' );
-					var value = this.value;
+					var value = _this.applyFieldFilter( this.name, 'preValidateValue', this.value );
 					var pattern = this.getAttribute( 'data-pattern' );
 					var minlength = this.getAttribute('minlength');
 					var maxlength = this.getAttribute('maxlength');
