@@ -1,6 +1,6 @@
 /**
  * @author @sgb004 to Orange
- * @Version 2.1.3
+ * @version 2.1.5
  */
 var orangeForms = {};
 
@@ -32,6 +32,7 @@ function OrangeForm( form, o ){
 	this.name = this.form.name;
 
 	this.noticesValidation = {
+		notValid: 'Revise los campos con errores.',
 		empty: 'Este campo es requerido.',
 		notlength: 'El número de caracteres que debe tener este campo es de ',
 		minlength: 'El número mínimo de caracteres es de ',
@@ -56,11 +57,40 @@ OrangeForm.prototype = {
 			this.reset = false;
 		}
 
-		this.form.addEventListener( 'submit', function( e ){
-			e.preventDefault();
-			_this.submit();
-		});
+		if( this.useXMLHttpRequest ){
+			this.form.addEventListener( 'submit', function( e ){
+				e.preventDefault();
+				_this.submit();
+			});
+		}else{
+			this.form.addEventListener( 'submit', function( e ){
+				var isValid;
+				_this.cleanNotices();
+				isValid = _this.validate();
 
+				if( !isValid ){
+					e.preventDefault();
+					_this.addNotices( _this.noticesValidation.notValid, 'danger' );
+				}
+			});
+		}
+		/*/
+		this.form.addEventListener( 'submit', function( e ){
+			if( this.useXMLHttpRequest ){
+				e.preventDefault();
+				alert();
+				_this.submit();
+			}else{
+				var isValid;
+				_this.cleanNotices();
+				isValid = _this.validate();
+
+				if( !isValid ){
+					e.preventDefault();
+				}
+			}
+		});
+		/*/
 		for( i=0; i<this.form.elements.length; i++ ){
 			this.addField( this.form.elements[ i ] );
 		}
@@ -272,15 +302,11 @@ OrangeForm.prototype = {
 			this.fields[ field.name ] = field;
 		}
 	},
-	submit: function(){
-		var _this = this;
+	validate: function(){
 		var isValid = true;
-		var data, field, fieldIsValid;
+		var field, fieldIsValid;
 
 		this.applyEventListener( 'before_validate' );
-
-		data = new FormData( this.form )
-		this.cleanNotices();
 
 		for( field in this.fields ){
 			fieldIsValid = this.fields[field].validate();
@@ -292,9 +318,20 @@ OrangeForm.prototype = {
 		this.applyEventListener( 'after_validate', isValid );
 
 		isValid = this.applyFilter( 'form_is_valid', isValid );
+		return isValid;
+	},
+	submit: function(){
+		var _this = this;
+		var isValid;
+		
+		this.cleanNotices();
+		isValid = this.validate();
+
+		console.log( 'ENVIANDO' );
 
 		if( isValid ){
 			if( this.useXMLHttpRequest ){
+				var data = new FormData( this.form );
 				var xmlhttp = new XMLHttpRequest();
 
 				xmlhttp.open( 'POST', this.form.action, true );
@@ -325,18 +362,11 @@ OrangeForm.prototype = {
 
 				//data = this.applyFilter( 'pre_send_data', data );
 				xmlhttp.send( data );
-			}else{
-				this.form.removeEventListener( 'submit', function( e ){
-					e.preventDefault();
-					_this.submit();
-				});
-				this.form.submit();
-				this.form.addEventListener( 'submit', function( e ){
-					e.preventDefault();
-					_this.submit();
-				});
 			}
+		}else{
+			this.addNotices( this.noticesValidation.notValid, 'danger' );
 		}
+		return isValid;
 	},
 	error: function( xmlhttp ){
 		console.log( xmlhttp.responseText );
