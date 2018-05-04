@@ -1,6 +1,6 @@
 /**
  * @author @sgb004 to Orange
- * @version 2.1.5
+ * @version 2.1.6
  */
 var orangeForms = {};
 
@@ -233,8 +233,12 @@ OrangeForm.prototype = {
 					if( required != null && required != undefined ){
 						value = value.trim();
 						if( value == '' ){
+							var noticeEmpty = this.getAttribute('data-notice-empty');
 							isValid = false;
-							_this.addFieldNotice( this.name, _this.noticesValidation.empty );
+							if( noticeEmpty == null ){
+								noticeEmpty = _this.noticesValidation.empty;
+							}
+							_this.addFieldNotice( this.name, noticeEmpty );
 						}
 					}
 
@@ -326,8 +330,6 @@ OrangeForm.prototype = {
 		
 		this.cleanNotices();
 		isValid = this.validate();
-
-		console.log( 'ENVIANDO' );
 
 		if( isValid ){
 			if( this.useXMLHttpRequest ){
