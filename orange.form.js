@@ -1,6 +1,6 @@
 /**
  * @author @sgb004 to Orange
- * @version 2.1.7
+ * @version 2.1.8
  */
 var orangeForms = {};
 
@@ -396,7 +396,6 @@ OrangeForm.prototype = {
 		if( result['success'] ){
 			typeNotice = 'success';
 			if( this.redirectSuccess != '' ){
-				location.href = this.redirectSuccess;
 			}
 		}
 
@@ -409,8 +408,13 @@ OrangeForm.prototype = {
 		}
 		
 		this._success( result, xmlhttp );
-		this.hiddenLoading();
-
+		
+		if( result['success'] && this.redirectSuccess != '' ){
+			location.href = this.redirectSuccess;
+		}else{
+			this.hiddenLoading();
+		}
+		
 		if( result['success'] && this.reset ){ 
 			this.form.reset();
 		}
