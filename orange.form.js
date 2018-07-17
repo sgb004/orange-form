@@ -1,6 +1,6 @@
 /**
  * @author @sgb004 to Orange
- * @version 2.1.7
+ * @version 2.1.6
  */
 var orangeForms = {};
 
@@ -30,7 +30,6 @@ function OrangeForm( form, o ){
 	this.useXMLHttpRequest = true;
 	this.reset = true;
 	this.name = this.form.name;
-	this.redirectSuccess = '';
 
 	this.noticesValidation = {
 		notValid: 'Revise los campos con errores.',
@@ -47,7 +46,7 @@ function OrangeForm( form, o ){
 OrangeForm.prototype = {
 	init: function( _this ){
 		var useXMLHttpRequest = this.form.getAttribute( 'data-use-xml-http-request' );
-		var reset = this.form.getAttribute( 'data-reset' );
+		var reset = this.form.getAttribute( 'data-reset' ); 
 		this.form.setAttribute( 'novalidate', 'novalidate' );
 
 		if( useXMLHttpRequest === 'false' ){
@@ -59,12 +58,6 @@ OrangeForm.prototype = {
 		}
 
 		if( this.useXMLHttpRequest ){
-			var redirectSuccess = this.form.getAttribute('data-redirect-success');
-
-			if( redirectSuccess != null ){
-				this.redirectSuccess = redirectSuccess;
-			}
-
 			this.form.addEventListener( 'submit', function( e ){
 				e.preventDefault();
 				_this.submit();
@@ -81,7 +74,6 @@ OrangeForm.prototype = {
 				}
 			});
 		}
-
 		/*/
 		this.form.addEventListener( 'submit', function( e ){
 			if( this.useXMLHttpRequest ){
@@ -395,9 +387,6 @@ OrangeForm.prototype = {
 
 		if( result['success'] ){
 			typeNotice = 'success';
-			if( this.redirectSuccess != '' ){
-				location.href = this.redirectSuccess;
-			}
 		}
 
 		for( field in result.fields ){
