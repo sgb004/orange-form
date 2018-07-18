@@ -395,8 +395,6 @@ OrangeForm.prototype = {
 
 		if( result['success'] ){
 			typeNotice = 'success';
-			if( this.redirectSuccess != '' ){
-			}
 		}
 
 		for( field in result.fields ){
@@ -408,7 +406,7 @@ OrangeForm.prototype = {
 		}
 		
 		this._success( result, xmlhttp );
-		
+
 		if( result['success'] && this.redirectSuccess != '' ){
 			location.href = this.redirectSuccess;
 		}else{
