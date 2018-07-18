@@ -370,7 +370,7 @@ OrangeForm.prototype = {
 				this.showLoading();
 				this.disabled();
 
-				//data = this.applyFilter( 'pre_send_data', data );
+				data = this.applyFilter( 'pre_send_data', data );
 				xmlhttp.send( data );
 			}
 		}else{
